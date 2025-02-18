@@ -1,16 +1,33 @@
 services:
   blog_dashboard:
     container_name: blog_dashboard
+    image: image_blog_dashboard
     build: .
-    restart: always
-    networks:
-      - my_network
     ports:
       - "8081:80"
-      - "444:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - my_network
+
+    caddy:
+      image: caddy:latest
+      container_name: blog_dashboard_reverse_proxy
+      restart: unless-stopped
+      ports:
+        - "8090:80"
+        - "444:443"
+      volumes:
+        - ./Caddyfile:/etc/caddy/Caddyfile
+        - caddy_data:/data
+        - caddy_config:/config
+      networks:
+        - my_network
+      depends_on:
+        - blog_dashboard
 
 networks:
   my_network:
-    driver: bridge
+    external: true
+
+volumes:
+  caddy_data:
+  caddy_config:
