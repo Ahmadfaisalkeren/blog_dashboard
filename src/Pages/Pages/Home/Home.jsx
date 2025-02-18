@@ -16,7 +16,7 @@ const Home = () => {
       <div className="p-3 grid grid-cols-3 gap-3">
         <div className="rounded-lg bg-gradient-to-r from-indigo-400 to-cyan-400 min-h-[100px]">
           <div className="flex justify-between">
-            <p className="p-2 text-white font-bold text-base">Heroes Total</p>
+            <p className="p-2 text-white font-bold text-base">Heroes</p>
             <BiCategoryAlt
               size={80}
               className="text-white hover:scale-110 duration-300"
