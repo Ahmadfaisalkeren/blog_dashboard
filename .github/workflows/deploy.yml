@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to VPS
+      - name: Connect to VPS and Prepare Directory
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -19,24 +19,33 @@ jobs:
           script: |
             PROJECT_PATH="/var/www/docker/blog_dashboard"
 
-            if [ -d "$PROJECT_PATH/.git" ]; then
-              cd $PROJECT_PATH
-              echo "Project exists, performing update..."
-            else
-              rm -rf $PROJECT_PATH
-              git clone -b main https://github.com/Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
-              cd $PROJECT_PATH
+            # Ensure the folder exists
+            if [ ! -d "$PROJECT_PATH" ]; then
+              echo "Error: Directory does not exist! Please create it manually and set permissions."
+              exit 1
             fi
 
-      - name: Pull Latest Changes
+            # Ensure correct ownership (change 'your-username' to the correct user)
+            sudo chown -R $USER:$USER $PROJECT_PATH
+
+      - name: Clone or Pull Latest Changes
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /var/www/docker/blog_dashboard
-            git pull origin main
+            PROJECT_PATH="/var/www/docker/blog_dashboard"
+
+            # If the folder is empty, clone the repo
+            if [ -z "$(ls -A $PROJECT_PATH)" ]; then
+              echo "Folder is empty, cloning repository..."
+              git clone -b main https://github.com/Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
+            else
+              echo "Folder is not empty, pulling latest changes..."
+              cd $PROJECT_PATH
+              git pull origin main
+            fi
 
       - name: Build and Restart Docker Services
         uses: appleboy/ssh-action@v0.1.10
