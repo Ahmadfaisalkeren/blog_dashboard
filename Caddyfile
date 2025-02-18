@@ -1,8 +1,3 @@
-apigeni.kipasangen.my.id {
-    reverse_proxy blog_api:80
-}
-
-# Domain for your frontend (React app)
 http://dashboard.kipasangen.my.id {
     root * /srv
     file_server
