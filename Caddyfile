@@ -1,0 +1,16 @@
+dashboard.kipasangen.my.id {
+    root * /srv
+    file_server
+
+    # Redirect all unknown routes to index.html (for React Router)
+    try_files {path} /index.html
+
+    # Enable Gzip compression for better performance
+    encode gzip zstd
+
+    # Log requests (optional, for debugging)
+    log {
+        output stdout
+        format json
+    }
+}
