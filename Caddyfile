@@ -3,7 +3,7 @@ apigeni.kipasangen.my.id {
 }
 
 # Domain for your frontend (React app)
-dashboard.kipasangen.my.id {
+http://dashboard.kipasangen.my.id {
     root * /srv
     file_server
 
@@ -18,4 +18,7 @@ dashboard.kipasangen.my.id {
         output stdout
         format json
     }
+
+    # Optional: Disable automatic HTTPS
+    tls off
 }
