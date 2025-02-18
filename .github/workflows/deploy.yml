@@ -22,9 +22,6 @@ jobs:
             # Ensure correct permissions
             sudo chown -R $USER:$USER $PROJECT_PATH || true
 
-            # Ensure GitHub is a known host (avoids SSH confirmation)
-            ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
             # Check if the folder is already a git repository
             if [ -d "$PROJECT_PATH/.git" ]; then
               echo "Repository exists, pulling latest changes..."
@@ -32,9 +29,8 @@ jobs:
               git pull origin main
             else
               echo "Repository not found, cloning..."
-              git clone git@github.com:Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
+              git clone https://github.com/Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
             fi
-
 
       - name: Pull Latest Changes
         uses: appleboy/ssh-action@v0.1.10
