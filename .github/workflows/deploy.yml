@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to VPS
+      - name: Connect to VPS and Clone if Needed
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -20,12 +20,11 @@ jobs:
             PROJECT_PATH="/var/www/docker/blog_dashboard"
 
             if [ -d "$PROJECT_PATH/.git" ]; then
-              cd $PROJECT_PATH
-              echo "Project exists, performing update..."
+              echo "Repository exists, skipping clone."
             else
-              rm -rf $PROJECT_PATH
-              git clone -b main https://github.com/Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
-              cd $PROJECT_PATH
+              echo "Repository does not exist or is broken. Cloning..."
+              rm -rf $PROJECT_PATH  # Remove any broken directory
+              git clone https://github.com/Ahmadfaisalkeren/blog_dashboard.git $PROJECT_PATH
             fi
 
       - name: Pull Latest Changes
@@ -36,6 +35,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /var/www/docker/blog_dashboard
+            git reset --hard  # Ensure clean working directory
             git pull origin main
 
       - name: Build and Restart Docker Services
