@@ -1,5 +1,5 @@
 dashboard.kipasangen.my.id {
-    reverse_proxy blog_api:80
+    reverse_proxy blog_dashboard:80
 
     tls {
        ca https://acme-staging-v02.api.letsencrypt.org/directory
