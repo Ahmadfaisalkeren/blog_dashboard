@@ -1,19 +1,7 @@
-http://dashboard.kipasangen.my.id {
-    root * /srv
-    file_server
+dashboard.kipasangen.my.id {
+    reverse_proxy blog_api:80
 
-    # Redirect all unknown routes to index.html (for React Router)
-    try_files {path} /index.html
-
-    # Enable Gzip compression for better performance
-    encode gzip zstd
-
-    # Log requests (optional, for debugging)
-    log {
-        output stdout
-        format json
+    tls {
+       ca https://acme-staging-v02.api.letsencrypt.org/directory
     }
-
-    # Optional: Disable automatic HTTPS
-    tls off
 }
